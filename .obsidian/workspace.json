@@ -37,7 +37,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Methods.md",
+                "file": "Patterns.md",
                 "mode": "source",
                 "source": false
               }
@@ -45,24 +45,6 @@
           }
         ],
         "currentTab": 2
-      },
-      {
-        "id": "501f08fbf072e46e",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "8b17f76899a0fb47",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Methods.md",
-                "mode": "preview",
-                "source": false
-              }
-            }
-          }
-        ]
       }
     ],
     "direction": "vertical"
@@ -128,7 +110,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Methods.md",
+                "file": "Patterns.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -145,7 +127,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Methods.md",
+                "file": "Patterns.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -168,7 +150,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Methods.md"
+                "file": "Patterns.md"
               }
             }
           }
@@ -191,11 +173,11 @@
   },
   "active": "2a382d73440d58ae",
   "lastOpenFiles": [
-    "Patterns.md",
     "Methods.md",
-    "Data Structures.md",
-    "Tasks.md",
+    "Patterns.md",
     "Sortings.md",
+    "Tasks.md",
+    "Data Structures.md",
     "obsidian-img/Pasted image 20230718003922.png",
     "obsidian-img/Methods",
     "obsidian-img/insertion_sort.png",
