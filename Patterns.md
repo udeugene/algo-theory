@@ -117,3 +117,102 @@ def totalFruit(fruits):
 
     return max_harvest
 ```
+### No-repeat Substring
+Given a string, find the **length of the longest substring** which has **no repeating characters**.
+```python
+def lengthOfLongestSubstring(self, s: str) -> int:
+	max_len = 0
+	l = 0
+	seen = {}
+
+	for char in s:
+		if char not in seen:
+			seen[char] = 1
+		else:
+			seen[char] += 1
+
+		while seen[char] > 1:
+			seen[s[l]] -= 1
+			if seen[s[l]] <= 0:
+				del seen[s[l]]
+			l += 1
+		max_len = max(max_len, len(seen))
+
+	return max_len
+```
+
+### Longest Repeating Character Replacement
+You are given a string `s` and an integer `k`. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most `k` times.
+```python
+def characterReplacement(self, s: str, k: int) -> int:
+	curr = {}
+	l = 0
+	max_len = 0
+	max_cnt = 0
+
+	for i in range(len(s)):
+		if s[i] not in curr:
+			curr[s[i]] = 1
+		else:
+			curr[s[i]] += 1
+
+		if curr[s[i]] > max_cnt:
+			max_cnt = curr[s[i]]
+		
+
+		while i - l - max_cnt + 1 > k:
+			curr[s[l]] -= 1
+			l += 1
+
+		max_len = max(max_len, i - l + 1)
+	
+	return max_len
+```
+### Max Consecutive Ones III
+```python
+def longestOnes(self, nums: List[int], k: int) -> int:
+	l=r=0    
+	for r in range(len(nums)):
+		if nums[r] == 0:
+			k-=1
+		if k<0:
+			if nums[l] == 0:
+				k+=1
+			l+=1
+	return r-l+1
+```
+### #### [Permutation in String](https://leetcode.com/problems/permutation-in-string/)
+Given two strings `s1` and `s2`, return `true` _if_ `s2` _contains a permutation of_ `s1`_, or_ `false` _otherwise_.
+
+In other words, return `true` if one of `s1`'s permutations is the substring of `s2`.
+```python
+def checkInclusion(self, s1: str, s2: str) -> bool:
+	l = 0
+	match_cnt = 0
+	s1_dict = {}
+
+	for s in s1:
+		if s not in s1_dict:
+			s1_dict[s] = 1
+		else:
+			s1_dict[s] += 1
+
+	for i, char in enumerate(s2):
+
+		if char in s1_dict:
+			s1_dict[char] -= 1
+			if s1_dict[char] == 0:
+				match_cnt += 1
+		
+		if i - l + 1 > len(s1):
+			if s2[l] in s1_dict:
+				if s1_dict[s2[l]] == 0:
+					match_cnt -= 1
+				s1_dict[s2[l]] += 1
+			l += 1
+
+		if match_cnt == len(s1_dict):
+			return True
+		
+	return False
+```
