@@ -1,5 +1,5 @@
-## 1. Sliding window
-### Maximum Sum Subarray of Size K
+## Sliding windows
+#### Maximum Sum Subarray of Size K
 $O(N*K)$ solution 
 Calculate each k-size subarrays
 ```python
@@ -37,7 +37,7 @@ def max_subarray(k, arr):
 	return max_sum
 	
 ```
-### Smallest Subarray with a given sum
+#### [Minimum Size Subarray Sum](https://leetcode.com/problems/minimum-size-subarray-sum/)
 **Description**  
 	Given an array of positive numbers and a positive number ‘S’, find the length of the **smallest contiguous subarray whose sum is greater than or equal to ‘S’**. Return 0, if no such subarray exists.
 
@@ -62,7 +62,7 @@ def min_subarr_len(target, nums):
 	
 	return min_len
 ```
-### Longest Substring with K Distinct Characters
+#### Longest Substring with K Distinct Characters
 Given a string, find the length of the **longest substring** in it **with no more than K distinct characters**.
 ```python
 def longestKSubstr(self, s, k):
@@ -89,7 +89,7 @@ def longestKSubstr(self, s, k):
 		
 	return max_size
 ```
-### Fruits into Baskets
+#### [Fruit Into Baskets](https://leetcode.com/problems/fruit-into-baskets/)
 Pretty the same idea as the previous one
 ```python
 def totalFruit(fruits):
@@ -117,7 +117,7 @@ def totalFruit(fruits):
 
     return max_harvest
 ```
-### No-repeat Substring
+#### [Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
 Given a string, find the **length of the longest substring** which has **no repeating characters**.
 ```python
 def lengthOfLongestSubstring(self, s: str) -> int:
@@ -141,7 +141,7 @@ def lengthOfLongestSubstring(self, s: str) -> int:
 	return max_len
 ```
 
-### Longest Repeating Character Replacement
+#### [Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
 You are given a string `s` and an integer `k`. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most `k` times.
 ```python
 def characterReplacement(self, s: str, k: int) -> int:
@@ -168,7 +168,7 @@ def characterReplacement(self, s: str, k: int) -> int:
 	
 	return max_len
 ```
-### Max Consecutive Ones III
+#### [Max Consecutive Ones III](https://leetcode.com/problems/max-consecutive-ones-iii/)
 ```python
 def longestOnes(self, nums: List[int], k: int) -> int:
 	l=r=0    
@@ -181,7 +181,7 @@ def longestOnes(self, nums: List[int], k: int) -> int:
 			l+=1
 	return r-l+1
 ```
-### #### [Permutation in String](https://leetcode.com/problems/permutation-in-string/)
+#### [Permutation in String](https://leetcode.com/problems/permutation-in-string/)
 Given two strings `s1` and `s2`, return `true` _if_ `s2` _contains a permutation of_ `s1`_, or_ `false` _otherwise_.
 
 In other words, return `true` if one of `s1`'s permutations is the substring of `s2`.
@@ -215,4 +215,106 @@ def checkInclusion(self, s1: str, s2: str) -> bool:
 			return True
 		
 	return False
+```
+
+## Two pointers
+#### [Two Sum II - Input Array Is Sorted](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
+Given a **1-indexed** array of integers `numbers` that is already **_sorted in non-decreasing order_**, find two numbers such that they add up to a specific `target` number. Let these two numbers be `numbers[index1]` and `numbers[index2]` where `1 <= index1 < index2 < numbers.length`.
+
+Return _the indices of the two numbers,_ `index1` _and_ `index2`_, **added by one** as an integer array_ `[index1, index2]` _of length 2._
+
+The tests are generated such that there is **exactly one solution**. You **may not** use the same element twice.
+```python
+def twoSum(numbers, target):
+	"""
+	:type numbers: List[int]
+	:type target: int
+	:rtype: List[int]
+	"""
+
+	l = 0
+	r = len(numbers) - 1
+
+	while l < r:
+		if numbers[l] + numbers[r] == target:
+			return [l + 1, r + 1]
+		elif numbers[l] + numbers[r] > target:
+			r -= 1
+		else:
+			l += 1
+```
+#### [Remove Duplicates from Sorted Array](https://leetcode.com/problems/remove-duplicates-from-sorted-array/)
+Given an integer array `nums` sorted in **non-decreasing order**, remove the duplicates [**in-place**](https://en.wikipedia.org/wiki/In-place_algorithm) such that each unique element appears only **once**. The **relative order** of the elements should be kept the **same**. Then return _the number of unique elements in_ `nums`.
+
+Consider the number of unique elements of `nums` to be `k`, to get accepted, you need to do the following things:
+
+- Change the array `nums` such that the first `k` elements of `nums` contain the unique elements in the order they were present in `nums` initially. The remaining elements of `nums` are not important as well as the size of `nums`.
+- Return `k`.
+```python
+def removeDuplicates(nums: List[int]) -> int:
+	l = 0
+	r = 0
+
+	while r < len(nums) - 1:
+		r += 1
+		if nums[r] > nums[l]:
+			l += 1
+		nums[l] = nums[r]
+	
+	return l + 1
+
+```
+#### [Squares of a Sorted Array](https://leetcode.com/problems/squares-of-a-sorted-array/)
+```python
+def sortedSquares(self, nums: List[int]) -> List[int]:
+	n = len(nums)
+
+	l = 0
+	r = n - 1
+	res = [0] * n
+
+	while r >= l:
+		r_sq = nums[r] ** 2
+		l_sq = nums[l] ** 2
+
+		if r_sq >= l_sq:
+			res[r - l] = r_sq
+			r -= 1
+		else:
+			res[r - l] = l_sq
+			l += 1
+
+	return res
+```
+#### [3Sum](https://leetcode.com/problems/3sum/)
+Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.
+
+Notice that the solution set must not contain duplicate triplets.  
+**Approach 1**
+```python
+def threeSum(self, nums: List[int]) -> List[List[int]]: 
+	nums.sort() # sorting cause we need to avoid duplicates, with this duplicates will be near to each other
+	l=[]
+	for i in range(len(nums)):  #this loop will help to fix the one number i.e, i
+		if i>0 and nums[i-1]==nums[i]:  #skipping if we found the duplicate of i
+			continue 
+		
+		#NOW FOLLOWING THE RULE OF TWO POINTERS AFTER FIXING THE ONE VALUE (i)
+		j=i+1 #taking j pointer larger than i (as said in ques)
+		k=len(nums)-1 #taking k pointer from last 
+		while j<k: 
+			s=nums[i]+nums[j]+nums[k] 
+			if s>0: #if sum s is greater than 0(target) means the larger value(from right as nums is sorted i.e, k at right) 
+			#is taken and it is not able to sum up to the target
+				k-=1  #so take value less than previous
+			elif s<0: #if sum s is less than 0(target) means the shorter value(from left as nums is sorted i.e, j at left) 
+			#is taken and it is not able to sum up to the target
+				j+=1  #so take value greater than previous
+			else:
+				l.append([nums[i],nums[j],nums[k]]) #if sum s found equal to the target (0)
+				j+=1 
+				while nums[j-1]==nums[j] and j<k: #skipping if we found the duplicate of j and we dont need to check 
+				#the duplicate of k cause it will automatically skip the duplicate by the adjustment of i and j
+					j+=1   
+	return l
 ```
