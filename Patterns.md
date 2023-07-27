@@ -290,7 +290,6 @@ def sortedSquares(self, nums: List[int]) -> List[int]:
 Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.
 
 Notice that the solution set must not contain duplicate triplets.  
-**Approach 1**
 ```python
 def threeSum(self, nums: List[int]) -> List[List[int]]: 
 	nums.sort() # sorting cause we need to avoid duplicates, with this duplicates will be near to each other
@@ -317,4 +316,65 @@ def threeSum(self, nums: List[int]) -> List[List[int]]:
 				#the duplicate of k cause it will automatically skip the duplicate by the adjustment of i and j
 					j+=1   
 	return l
+```
+#### [3Sum Closest](https://leetcode.com/problems/3sum-closest/)
+Given an integer array `nums` of length `n` and an integer `target`, find three integers in `nums` such that the sum is closest to `target`.
+
+Return _the sum of the three integers_.
+
+You may assume that each input would have exactly one solution.
+```python
+def threeSumClosest(self, nums: List[int], target: int) -> int:
+	import sys
+	nums.sort()
+	min_diff = sys.maxsize
+
+	for i in range(len(nums)):
+		j = i + 1
+		k = len(nums) - 1
+
+		while j < k:
+			curr_sum = nums[i] + nums[j] + nums[k]
+			curr_diff = abs(curr_sum - target)
+
+			if curr_sum == target:
+				return curr_sum
+
+			if curr_diff < min_diff:
+				min_diff = curr_diff
+				min_sum = curr_sum
+			
+			if curr_sum < target:
+				j += 1
+			else:
+				k -= 1
+	return min_sum
+```
+#### [3Sum Smaller](https://practice.geeksforgeeks.org/problems/count-triplets-with-sum-smaller-than-x5549/1?utm_source=geeksforgeeks&utm_medium=article_practice_tab&utm_campaign=article_practice_tab)
+Given an array **arr[]** of distinct integers of size **N** and a value **sum**, the task is to find the count of triplets **(i, j, k)**, having **(i<j<k)** with the sum of ****(arr[i] + arr[j] + arr[k])**** smaller than the given value sum.
+```python
+def countTriplets(self, arr, n, sumo):
+	
+	arr.sort()
+	res = 0
+	
+	for i in range(n):
+		
+		if i > 0 and arr[i] == arr[i - 1]:
+			continue
+		
+		j = i + 1
+		k = n - 1
+		
+		while j < k:
+			curr_sum = arr[i] + arr[j] + arr[k]
+			
+			if curr_sum < sumo:
+				res += k - j # since arr[k] >= arr[j] each number between k and j is suitable for getting sum less then target
+				j += 1
+				while arr[j] == arr[j - 1] and j < k:
+					j += 1
+			else:
+				k -= 1
+	return res     
 ```
