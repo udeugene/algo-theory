@@ -216,7 +216,28 @@ def checkInclusion(self, s1: str, s2: str) -> bool:
 		
 	return False
 ```
+#### [Subarray Product Less Than K](https://leetcode.com/problems/subarray-product-less-than-k/)
+Given an array of integers `nums` and an integer `k`, return _the number of contiguous subarrays where the product of all the elements in the subarray is strictly less than_ `k`.
+```python
+def numSubarrayProductLessThanK(self, nums: List[int], k: int) -> int:
+	l = 0
+	cnt = 0
+	curr_prod = 1
 
+	if k <= 1:
+		return 0
+
+	for r in range(len(nums)):
+		curr_prod *= nums[r]
+		
+		while curr_prod >= k:
+			curr_prod /= nums[l]
+			l += 1
+
+		cnt += r - l + 1
+
+	return cnt
+```
 ## Two pointers
 #### [Two Sum II - Input Array Is Sorted](https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/)
 Given a **1-indexed** array of integers `numbers` that is already **_sorted in non-decreasing order_**, find two numbers such that they add up to a specific `target` number. Let these two numbers be `numbers[index1]` and `numbers[index2]` where `1 <= index1 < index2 < numbers.length`.
@@ -377,4 +398,214 @@ def countTriplets(self, arr, n, sumo):
 			else:
 				k -= 1
 	return res     
+```
+#### [Sort Colors](https://leetcode.com/problems/sort-colors/description/)
+**Solution 1**: count each color and rewrite:
+```python
+def sortColors(nums: List[int]) -> None:
+    """
+    Do not return anything, modify nums in-place instead.
+    """
+    zeros = 0
+    ones = 0
+    twos = 0
+
+    for num in nums:
+        if num == 0:
+            zeros += 1
+        elif num == 1:
+            ones += 1
+        else:
+            twos += 1
+
+    nums[:zeros] = [0] * zeros
+    nums[zeros: zeros + ones] = [1] * ones
+    nums[zeros + ones:] = [2] * twos
+```
+**Solution 2**: Two pointers
+```python
+def sortColors(nums):
+    l, m, r = 0, 0, len(nums) - 1
+
+    while m <= r:
+        if nums[m] == 0:
+            nums[l], nums[m] = nums[m], nums[l]
+            m += 1
+            l += 1
+        elif nums[m] == 1:
+            m += 1
+        else:
+            nums[m], nums[r] = nums[r], nums[m]
+            r -= 1
+
+```
+## Fast & Slow Pointers
+#### [Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/description/)
+Return `true` _if there is a cycle in the linked list_. Otherwise, return `false`.
+```python
+def hasCycle(head: Optional[ListNode]) -> bool:
+	slow, fast = head, head
+	while fast is not None and fast.next is not None:
+		slow = slow.next
+		fast = fast.next.next
+
+		if slow == fast:
+			return True
+			
+	return False
+```
+#### [Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
+Given the `head` of a linked list, return _the node where the cycle begins. If there is no cycle, return_ `null`.
+
+![[Pasted image 20230730220856.png]]
+Fast pointer is 2 times faster then slow one. Slow and fast meet in point $Z$. By that time slow pointer travelled $a+b$, and the fast one $a + b + k \cdot (c + b)$ , where $k$ is positive integer, which is present when loop is small and fast pointer moved around it for many times.
+We know that fast is 2 times faster, so:
+$2 \cdot (a + b) = a + b + c + b + k \cdot (c + b)$
+$k \cdot (c+b)$ can be ignored, because it equivalent to $k$ full cycles and do not affect point where slow and fast meet. So:
+$a = c$
+We need to push pointers until they meet in $Z$. And then push one pointer from head and other from $Z$ till they meet.
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+def detectCycle(head: Optional[ListNode]) -> Optional[ListNode]:
+	fast, slow = head, head
+
+	while fast and fast.next:
+		slow = slow.next
+		fast = fast.next.next
+
+		if fast == slow:
+			slow = head
+			while slow != fast:
+				slow = slow.next
+				fast = fast.next
+			return slow
+	
+	return None
+
+```
+#### [Happy Number](https://leetcode.com/problems/happy-number/)
+```python
+def find_square(num):
+	s = 0
+	while num > 0:
+		digit = num % 10
+		s += digit ** 2
+		num = num // 10
+	return s
+
+def isHappy(n: int) -> bool:
+	slow, fast = n, n
+
+	while 1:
+		slow = self.find_square(slow)
+		fast = self.find_square(self.find_square(fast))
+		if slow == fast:
+			break
+			
+	if slow == 1:
+		return True
+	else:
+		return False
+```
+
+#### [Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/)
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+def middleNode(head: Optional[ListNode]) -> Optional[ListNode]:
+	slow, fast = head, head
+	while fast and fast.next:
+		slow = slow.next
+		fast = fast.next.next
+
+	return slow
+```
+#### [Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
+Find mid then reverse half from mid to the end. Iterate from head and mid simultaneously.
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+def isPalindrome(head: Optional[ListNode]) -> bool:
+	slow, fast = head, head
+
+	while fast and fast.next: 
+		slow = slow.next
+		fast = fast.next.next
+
+	curr = slow
+	prev = None
+	while curr:
+		next = curr.next
+		curr.next = prev
+		prev = curr
+		curr = next
+
+	first_half = head
+	while prev:
+		if prev.val != first_half.val:
+			return False
+
+		prev = prev.next
+		first_half = first_half.next
+
+	return True
+```
+## Merge Intervals
+#### [Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+```python
+def merge(intervals: List[List[int]]) -> List[List[int]]:
+	intervals.sort(key=lambda x: x[0])
+	merged = []
+
+	i = 0
+	while i < len(intervals):
+		l = intervals[i][0]
+		r = intervals[i][1]
+		i += 1
+		while i < len(intervals) and r >= intervals[i][0]:
+			r = max(r, intervals[i][1])
+			i += 1
+		merged.append([l, r])
+
+	return merged
+```
+#### [Insert Interval](https://leetcode.com/problems/insert-interval/)
+1. Find position where new interval should be inserted to keep the whole intervals array sorted by the first element.
+2. Merge overlapping intervals 
+```python
+
+def insert(intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+	l = newInterval[0]
+	i = 0
+
+	while i < len(intervals) and l > intervals[i][0]:
+		i += 1
+
+	intervals.insert(i, newInterval)
+
+	merged = []
+	i = 0
+	while i < len(intervals):
+		l = intervals[i][0]
+		r = intervals[i][1]
+		i += 1
+		while i < len(intervals) and r >= intervals[i][0]:
+			r = max(r, intervals[i][1])
+			i += 1
+		merged.append([l, r])
+
+	return merged
+
 ```
