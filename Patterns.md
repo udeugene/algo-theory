@@ -455,8 +455,8 @@ def hasCycle(head: Optional[ListNode]) -> bool:
 	return False
 ```
 #### [Linked List Cycle II](https://leetcode.com/problems/linked-list-cycle-ii/)
-Given the `head` of a linked list, return _the node where the cycle begins. If there is no cycle, return_ `null`.
-
+Given the `head` of a linked list, return _the node where the cycle begins. If there is no cycle, return_ `null`. 
+**Solution**
 ![[Pasted image 20230730220856.png]]
 Fast pointer is 2 times faster then slow one. Slow and fast meet in point $Z$. By that time slow pointer travelled $a+b$, and the fast one $a + b + k \cdot (c + b)$ , where $k$ is positive integer, which is present when loop is small and fast pointer moved around it for many times.
 We know that fast is 2 times faster, so:
@@ -489,6 +489,17 @@ def detectCycle(head: Optional[ListNode]) -> Optional[ListNode]:
 
 ```
 #### [Happy Number](https://leetcode.com/problems/happy-number/)
+
+Write an algorithm to determine if a number `n` is happy.
+A **happy number** is a number defined by the following process:
+- Starting with any positive integer, replace the number by the sum of the squares of its digits.
+- Repeat the process until the number equals 1 (where it will stay), or it **loops endlessly in a cycle** which does not include 1.
+- Those numbers for which this process **ends in 1** are happy.
+- 
+Return `true` _if_ `n` _is a happy number, and_ `false` _if not_.
+
+**Solution** 
+All numbers cycle, but ends up to 1 either to other number. Find cycle using fast & slow pointers.
 ```python
 def find_square(num):
 	s = 0
@@ -514,6 +525,9 @@ def isHappy(n: int) -> bool:
 ```
 
 #### [Middle of the Linked List](https://leetcode.com/problems/middle-of-the-linked-list/)
+Given the `head` of a singly linked list, return _the middle node of the linked list_. 
+If there are two middle nodes, return **the second middle** node.
+
 ```python
 # Definition for singly-linked list.
 # class ListNode:
@@ -529,6 +543,9 @@ def middleNode(head: Optional[ListNode]) -> Optional[ListNode]:
 	return slow
 ```
 #### [Palindrome Linked List](https://leetcode.com/problems/palindrome-linked-list/)
+Given the `head` of a singly linked list, return `true` _if it is a_ _palindrome_ _or_ `false` _otherwise_.
+
+**Solution** 
 Find mid then reverse half from mid to the end. Iterate from head and mid simultaneously.
 ```python
 # Definition for singly-linked list.
@@ -564,6 +581,8 @@ def isPalindrome(head: Optional[ListNode]) -> bool:
 ```
 ## Merge Intervals
 #### [Merge Intervals](https://leetcode.com/problems/merge-intervals/)
+Given an array of `intervals` where `intervals[i] = [starti, endi]`, merge all overlapping intervals, and return _an array of the non-overlapping intervals that cover all the intervals in the input_.
+
 ```python
 def merge(intervals: List[List[int]]) -> List[List[int]]:
 	intervals.sort(key=lambda x: x[0])
@@ -582,10 +601,14 @@ def merge(intervals: List[List[int]]) -> List[List[int]]:
 	return merged
 ```
 #### [Insert Interval](https://leetcode.com/problems/insert-interval/)
+You are given an array of non-overlapping intervals `intervals` where `intervals[i] = [starti, endi]` represent the start and the end of the `ith` interval and `intervals` is sorted in ascending order by `starti`. You are also given an interval `newInterval = [start, end]` that represents the start and end of another interval. 
+Insert `newInterval` into `intervals` such that `intervals` is still sorted in ascending order by `starti` and `intervals` still does not have any overlapping intervals (merge overlapping intervals if necessary). 
+Return `intervals` _after the insertion_.
+
+**Solution**
 1. Find position where new interval should be inserted to keep the whole intervals array sorted by the first element.
 2. Merge overlapping intervals 
 ```python
-
 def insert(intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
 	l = newInterval[0]
 	i = 0
@@ -608,4 +631,58 @@ def insert(intervals: List[List[int]], newInterval: List[int]) -> List[List[int]
 
 	return merged
 
+```
+
+## Cyclic Sort
+#### [Missing Number](https://leetcode.com/problems/missing-number/)
+Given an array `nums` containing `n` distinct numbers in the range `[0, n]`, return _the only number in the range that is missing from the array.
+
+```python
+def missingNumber(nums: List[int]) -> int:
+	i = 0
+
+	while i < len(nums):
+		while nums[i] != i and nums[i] != len(nums):
+			nums[nums[i]], nums[i] = nums[i], nums[nums[i]]
+		i += 1
+	
+	for i in range(len(nums)):
+		if nums[i] != i:
+			return i
+
+	return len(nums)
+```
+
+#### [Find All Numbers Disappeared in an Array](https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/)
+Given an array `nums` of `n` integers where `nums[i]` is in the range `[1, n]`, return _an array of all the integers in the range_ `[1, n]` _that do not appear in_ `nums`.
+
+1) Classic cycle sort
+```python
+def findDisappearedNumbers(nums: List[int]) -> List[int]:
+    i = 0
+
+    while i < len(nums):
+        while nums[i] != i + 1 and nums[nums[i] - 1] != nums[i]:
+            nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
+
+        i += 1
+
+    ans = []
+    for i in range(len(nums)):
+        if nums[i] != i + 1:
+            ans.append(i + 1)
+
+    return ans
+```
+2) Negate seen numbers
+```python
+def findDisappearedNumbers(nums: List[int]) -> List[int]:
+	for num in nums:
+		# Haven't seen before
+		if nums[abs(num)-1]>0:
+			# Store the fact that it has now been seen
+			nums[abs(num)-1] *= -1
+
+	# The numbers that weren't seen
+	return [i+1 for i, num in enumerate(nums) if num>0]
 ```

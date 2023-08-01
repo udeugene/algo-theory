@@ -18,8 +18,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "90b92e3884e39cce",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Patterns.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -146,18 +159,18 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "c89542fc2641f0f4",
+  "active": "90b92e3884e39cce",
   "lastOpenFiles": [
-    "obsidian-img/Pasted image 20230730220856.png",
-    "obsidian-img/Pasted image 20230730220740.png",
+    "Sortings.md",
+    "Methods.md",
     "Problems.md",
+    "obsidian-img/Pasted image 20230718003922.png",
+    "obsidian-img/Pasted image 20230730220740.png",
+    "obsidian-img/Pasted image 20230730220856.png",
     "Patterns.md",
     "Untitled.canvas",
-    "Methods.md",
     "Sliding windows.md",
-    "Sortings.md",
     "Data Structures.md",
-    "obsidian-img/Pasted image 20230718003922.png",
     "obsidian-img/Methods",
     "obsidian-img/insertion_sort.png",
     "obsidian-img/Pasted image 20230705013808.png",
