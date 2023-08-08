@@ -686,3 +686,330 @@ def findDisappearedNumbers(nums: List[int]) -> List[int]:
 	# The numbers that weren't seen
 	return [i+1 for i, num in enumerate(nums) if num>0]
 ```
+
+#### [Find All Duplicates in an Array](https://leetcode.com/problems/find-all-duplicates-in-an-array/)
+Given an integer array `nums` of length `n` where all the integers of `nums` are in the range `[1, n]` and each integer appears **once** or **twice**, return _an array of all the integers that appears **twice**_.
+
+You must write an algorithm that runs in `O(n)` time and uses only constant extra space.
+```python
+class Solution:
+    def findDuplicates(self, nums: List[int]) -> List[int]:
+        
+        duplicated = []
+        for num in nums:
+            if nums[abs(num) - 1] < 0:
+                duplicated.append(abs(num))
+            else:
+                nums[abs(num) - 1] = -nums[abs(num) - 1]
+        return duplicated
+```
+## Inplace reversal of a LinkedList
+#### [Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/)  
+Given the `head` of a singly linked list, reverse the list, and return _the reversed list_.
+
+**Iterative**
+```python
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        curr = head
+        while curr:
+            next = curr.next
+            curr.next = prev
+            prev = curr
+            curr = next
+        return prev
+```
+**Recursive**
+```python
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if head == None or head.next == None:
+            return head
+
+        newHead = self.reverseList(head.next)
+        head.next.next = head
+        head.next = None
+        return newHead
+```
+#### [Reverse Linked List II](https://leetcode.com/problems/reverse-linked-list-ii/)
+Given the `head` of a singly linked list and two integers `left` and `right` where `left <= right`, reverse the nodes of the list from position `left` to position `right`, and return _the reversed list_.
+```python
+class Solution:
+    def reverseBetween(self, head: Optional[ListNode], left: int, right: int) -> Optional[ListNode]:
+
+        temp = ListNode(val=0, next=head)
+        i = 0
+        l_node = temp
+        while i < left - 1:
+            l_node = l_node.next
+            i += 1
+
+        r_node = l_node
+        while i < right + 1:
+            r_node = r_node.next
+            i += 1
+
+        prev = r_node
+        curr = l_node.next
+        while curr != r_node:
+            next = curr.next
+            curr.next = prev
+            prev = curr
+            curr = next
+
+        l_node.next = prev
+        return temp.next
+```
+## Tree breadth search
+#### [Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+Given the `root` of a binary tree, return _the level order traversal of its nodes' values_. (i.e., from left to right, level by level).
+```python
+class Solution:
+    def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        res = []
+        if not root:
+            return res
+
+        queue = []
+        queue.append(root)
+        while len(queue) > 0:
+            curr_lvl = []
+            for _ in range(len(queue)):
+                curr_node = queue.pop(0)
+                curr_lvl.append(curr_node.val)
+
+                if curr_node.left:
+                    queue.append(curr_node.left)
+                
+                if curr_node.right:
+                    queue.append(curr_node.right)
+
+            res.append(curr_lvl)
+        
+        return res
+
+```
+#### [Binary Tree Level Order Traversal II](https://leetcode.com/problems/binary-tree-level-order-traversal-ii/)
+Given the `root` of a binary tree, return _the bottom-up level order traversal of its nodes' values_. (i.e., from left to right, level by level from leaf to root).
+```python
+from collections import deque
+class Solution:
+    def levelOrderBottom(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return []
+
+        res = deque() # deque for res
+        queue = deque()
+
+        queue.append(root)
+        while queue:
+            curr_lvl = []
+            for i in range(len(queue)):
+                curr_node = queue.popleft()
+                curr_lvl.append(curr_node.val)
+
+                if curr_node.left:
+                    queue.append(curr_node.left)
+
+                if curr_node.right:
+                    queue.append(curr_node.right)
+            
+            res.appendleft(curr_lvl) # and appendleft here
+
+        return res
+                
+```
+#### [Binary Tree Zigzag Level Order Traversal](https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/)
+Given the `root` of a binary tree, return _the zigzag level order traversal of its nodes' values_. (i.e., from left to right, then right to left for the next level and alternate between).
+```python
+from collections import deque
+class Solution:
+    def zigzagLevelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+        if not root:
+            return []
+
+        queue = deque()
+        res = []
+        queue.append(root)
+
+        i = 1
+        while queue:
+            curr_lvl = deque()
+            for _ in range(len(queue)):
+                curr_node = queue.pop()
+
+                if i % 2 == 0:
+                    curr_lvl.appendleft(curr_node.val)
+                else:
+                    curr_lvl.append(curr_node.val)
+
+                if curr_node.left:
+                    queue.appendleft(curr_node.left)
+                
+                if curr_node.right:
+                    queue.appendleft(curr_node.right)
+
+            i += 1
+            res.append(list(curr_lvl))
+
+        return res
+```
+#### [Minimum Depth of Binary Tree](https://leetcode.com/problems/minimum-depth-of-binary-tree/)
+Given a binary tree, find its minimum depth.
+
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+**Note:** A leaf is a node with no children.  
+**Iterative:**
+```python
+from collections import deque
+class Solution:
+    def minDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+
+        queue = deque()
+        queue.appendleft(root)
+        depth = 1
+
+        while queue:
+            for _ in range(len(queue)):
+                curr_node = queue.pop()
+
+                if not curr_node.left and not curr_node.right:
+                    return depth
+
+                if curr_node.left:
+                    queue.appendleft(curr_node.left)
+
+                if curr_node.right:
+                    queue.appendleft(curr_node.right)
+
+            depth += 1
+
+        return depth
+```
+**Recursive**
+```python
+from collections import deque
+class Solution:
+    def minDepth(self, root: Optional[TreeNode]) -> int:
+        if root is None:  return 0
+
+        leftDepth = self.minDepth(root.left)
+        rightDepth = self.minDepth(root.right)
+
+        if root.left is None and root.right is None:
+            return 1
+
+        if root.left is None:
+            return 1 + rightDepth
+
+        if root.right is None:
+            return 1 + leftDepth
+
+        return min(leftDepth, rightDepth) + 1
+```
+#### [Populating Next Right Pointers in Each Node](https://leetcode.com/problems/populating-next-right-pointers-in-each-node/)
+Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to `NULL`.
+
+Initially, all next pointers are set to `NULL`.
+![[Pasted image 20230808230206.png]]
+```python
+class Solution:
+    def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
+
+        if not root:
+            return None
+
+        queue = collections.deque()
+        queue.append(root)
+
+        while queue:
+            size = len(queue)
+            for _ in range(len(queue)):
+                curr = queue.popleft()
+
+                if size == 1:
+                    curr.next = None
+                else:
+                    curr.next = queue[0]
+                    size -= 1
+
+                if curr.left:
+                    queue.append(curr.left)
+                
+                if curr.right:
+                    queue.append(curr.right)
+
+        return root
+```
+## Tree Depth First Search
+#### [Path Sum](https://leetcode.com/problems/path-sum/)
+Given the `root` of a binary tree and an integer `targetSum`, return `true` if the tree has a **root-to-leaf** path such that adding up all the values along the path equals `targetSum`.
+
+A **leaf** is a node with no children.
+```python
+class Solution:
+    def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
+
+        if not root:
+            return False
+
+        if root.val == targetSum and not root.left and not root.right:
+            return True
+
+        return self.hasPathSum(root.left, targetSum - root.val) or self.hasPathSum(root.right, targetSum - root.val)
+```
+#### [Path Sum II](https://leetcode.com/problems/path-sum-ii/)
+Given the `root` of a binary tree and an integer `targetSum`, return _all **root-to-leaf** paths where the sum of the node values in the path equals_ `targetSum`_. Each path should be returned as a list of the node **values**, not node references_.
+
+A **root-to-leaf** path is a path starting from the root and ending at any leaf node. A **leaf** is a node with no children.
+```python
+class Solution:
+    def dfs(self, root, path, res, currSum):
+        if not root:
+            return []
+
+        path.append(root.val)
+
+        if not root.left and not root.right and currSum == root.val:
+            res.append(list(path))
+
+        self.dfs(root.left, path, res, currSum - root.val)
+        self.dfs(root.right, path, res, currSum - root.val)
+
+        path.pop()
+
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> List[List[int]]:
+        res = []
+        self.dfs(root, [], res, targetSum)
+        return res
+```
+***Asian solution**
+```python
+class Solution:
+    def pathSum(self, root: Optional[TreeNode], targetSum: int) -> List[List[int]]:
+        self.output = []
+
+        def dfs(node, path, sm):
+            sm += node.val
+            tmp = path + [node.val]
+
+            if node.left:
+                dfs(node.left, tmp, sm)
+
+            if node.right:
+                dfs(node.right, tmp, sm)
+
+            if not node.left and not node.right and sm == targetSum:
+                self.output.append(tmp)
+
+        if not root:
+            return []
+
+        dfs(root, [], 0)
+
+        return self.output
+```
