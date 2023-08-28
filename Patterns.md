@@ -1013,3 +1013,322 @@ class Solution:
 
         return self.output
 ```
+## Subsets
+#### [Subsets](https://leetcode.com/problems/subsets/)
+Given an integer array `nums` of **unique** elements, return _all possible_ _subsets_ _(the power set)_.
+The solution set **must not** contain duplicate subsets. Return the solution in **any order**.
+
+**Classic**
+```python
+def subsets(nums: List[int]) -> List[List[int]]:
+	res = [[]]
+	for num in nums:
+		for i in range(len(res)):
+			curr = list(res[i])
+			curr.append(num)
+			res.append(curr)
+
+	return res
+
+```
+Given set: [1, 5, 3]
+1. Start with an empty set: [[]]
+2. Add the first number (1) to all the existing subsets to create new subsets: [[], [1]];
+3. Add the second number (5) to all the existing subsets: [[], [1], **[5], [1,5]**];
+4. Add the third number (3) to all the existing subsets: [[], [1], [5], [1,5], **[3], [1,3], [5,3], [1,5,3]**].
+![[Pasted image 20230828235913.png]]
+
+**DFS**
+```python
+def subsets(nums: List[int]) -> List[List[int]]:
+
+	def dfs(nums, index, path, res):
+		res.append(path)
+		for i in range(index, len(nums)):
+			dfs(nums, i+1, path+[nums[i]], res)
+
+	res = []
+	dfs(sorted(nums), 0, [], res)
+	return res
+```
+#### [Subsets II](https://leetcode.com/problems/subsets-ii/)
+Given an integer array `nums` that may contain duplicates, return _all possible_ _subsets_ _(the power set)_. The solution set **must not** contain duplicate subsets. Return the solution in **any order**.
+
+**Classic**
+```python
+def subsetsWithDup(nums: List[int]) -> List[List[int]]:
+	res = [[]]
+	nums.sort()
+	for i in range(len(nums)):
+		for j in range(len(res)):
+			subset = list(res[j])
+			subset.append(nums[i])
+			if subset not in res:
+				res.append(subset)
+	return res
+```
+![[Pasted image 20230828235834.png]]
+**DFS**
+```python
+def subsetsWithDup(nums: List[int]) -> List[List[int]]:
+
+	def dfs(nums, index, path, res):
+		res.append(path)
+		for i in range(index, len(nums)):
+			if i > index and nums[i] == nums[i-1]:
+				continue
+			dfs(nums, i+1, path+[nums[i]], res)
+
+	res = []
+	dfs(sorted(nums), 0, [], res)
+	return res
+```
+#### [Permutations](https://leetcode.com/problems/permutations/)
+Given an array `nums` of distinct integers, return _all the possible permutations_. You can return the answer in **any order**.
+**Classic**
+```python
+from collections import deque
+
+def permute(nums: List[int]) -> List[List[int]]:
+	res = deque([[nums[0]]])
+
+	for j in range(1, len(nums)):
+		for i in range(len(res)):
+			curr = res[0]
+			for k in range(len(curr) + 1):
+				tmp = curr.copy()
+				tmp.insert(k, nums[j])
+				res.append(tmp)
+			res.popleft()
+	return res
+```
+![[Pasted image 20230829000150.png]]
+
+**DFS**
+```python
+from collections import deque
+
+def permute(nums: List[int]) -> List[List[int]]:
+	def dfs(path, used, res):
+		if len(path) == len(nums):
+			res.append(path[:])
+			return
+
+		for i, letter in enumerate(nums):
+			if used[i]:
+				continue
+			path.append(letter)
+			used[i] = True
+			dfs(path, used, res)
+			path.pop()
+			used[i] = False
+		
+	res = []
+	dfs([], [False] * len(nums), res)
+	return res
+```
+## Binary Search
+#### Binary Search
+```python
+def search(nums: List[int], target: int) -> int:
+	l, r = 0, len(nums) - 1
+
+	while l <= r:
+		i = l + (r - l) // 2
+		if nums[i] == target:
+			return i
+		elif nums[i] < target:
+			l = i + 1
+		elif nums[i] > target:
+			r = i - 1
+	return -1
+```
+#### [Find Smallest Letter Greater Than Target](https://leetcode.com/problems/find-smallest-letter-greater-than-target/)
+You are given an array of characters `letters` that is sorted in **non-decreasing order**, and a character `target`. There are **at least two different** characters in `letters`.
+
+Return _the smallest character in_ `letters` _that is lexicographically greater than_ `target`. If such a character does not exist, return the first character in `letters`.
+
+**Example 1:**
+	**Input:** letters = ["c","f","j"], target = "a"
+	**Output:** "c"
+	**Explanation:** The smallest character that is lexicographically greater than 'a' in letters is 'c'.
+
+**Example 2:**
+	**Input:** letters = ["c","f","j"], target = "c"
+	**Output:** "f"
+	**Explanation:** The smallest character that is lexicographically greater than 'c' in letters is 'f'.
+
+**Example 3:**
+	**Input:** letters = ["x","x","y","y"], target = "z"
+	**Output:** "x"
+	**Explanation:** There are no characters in letters that is lexicographically greater than 'z' so we return letters[0].
+
+```python
+def nextGreatestLetter(letters: List[str], target: str) -> str:
+	if target >= letters[-1] or target < letters[0]:
+		return letters[0]
+
+	l, r = 0, len(letters) - 1
+
+	while l <= r:
+		m = (l + r) // 2
+		if letters[m] > target:
+			r = m - 1
+		else:
+			l = m + 1
+
+	return letters[l]
+```
+
+#### [Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+Given an array of integers `nums` sorted in non-decreasing order, find the starting and ending position of a given `target` value.
+If `target` is not found in the array, return `[-1, -1]`.
+You must write an algorithm with `O(log n)` runtime complexity.
+```python
+def searchRange(nums: List[int], target: int) -> List[int]:
+	def search(x):
+		l, r = 0, len(nums)           
+		while l < r:
+			m = (l + r) // 2
+			if nums[m] < x:
+				l = m + 1
+			else:
+				r = m                    
+		return l
+	
+	l = search(target)
+	r = search(target+1)-1
+	
+	if l <= r:
+		return [l, r]
+			
+	return [-1, -1]
+```
+#### [Peak Index in a Mountain Array](https://leetcode.com/problems/peak-index-in-a-mountain-array/)
+An array `arr` is a **mountain** if the following properties hold:
+- `arr.length >= 3`
+- There exists some `i` with `0 < i < arr.length - 1` such that:
+    - `arr[0] < arr[1] < ... < arr[i - 1] < arr[i]`
+    - `arr[i] > arr[i + 1] > ... > arr[arr.length - 1]`
+Given a mountain array `arr`, return the index `i` such that `arr[0] < arr[1] < ... < arr[i - 1] < arr[i] > arr[i + 1] > ... > arr[arr.length - 1]`.
+You must solve it in `O(log(arr.length))` time complexity.
+```python
+def peakIndexInMountainArray(arr: List[int]) -> int:
+	l = 0
+	r = len(arr) - 1
+	while l < r:
+		m = (l + r) // 2
+		if arr[m] > arr[m + 1] and arr[m] > arr[m - 1]:
+			return m
+		if arr[m] < arr[m + 1]:
+			l = m + 1
+		else:
+			r = m - 1
+	return l
+```
+## Top K Elements
+#### [Kth Largest Element in an Array](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+Given an integer array `nums` and an integer `k`, return _the_ `kth` _largest element in the array_.
+Note that it is the `kth` largest element in the sorted order, not the `kth` distinct element.
+Can you solve it without sorting?
+```python
+import heapq
+def findKthLargest(nums: List[int], k: int) -> int:
+	minHeap = []
+	for i in range(k):
+		heapq.heappush(minHeap, nums[i])
+
+	for i in range(k, len(nums)):
+		if nums[i] > minHeap[0]:
+			heapq.heappop(minHeap)
+			heapq.heappush(minHeap, nums[i])
+	
+	return minHeap[0]
+```
+#### [Kth Largest Element in a Stream](https://leetcode.com/problems/kth-largest-element-in-a-stream/)
+Design a class to find the `kth` largest element in a stream. Note that it is the `kth` largest element in the sorted order, not the `kth` distinct element.
+Implement `KthLargest` class:
+- `KthLargest(int k, int[] nums)` Initializes the object with the integer `k` and the stream of integers `nums`.
+- `int add(int val)` Appends the integer `val` to the stream and returns the element representing the `kth` largest element in the stream.
+```python
+import heapq
+class KthLargest:
+
+    def __init__(self, k: int, nums: List[int]):
+        self.heap = []
+        self.k = k
+        for num in nums:
+            if len(self.heap) < k:
+                heapq.heappush(self.heap, num)
+            else:
+                if num > self.heap[0]:
+                    heapq.heappushpop(self.heap, num)
+        
+
+    def add(self, val: int) -> int:
+        if len(self.heap) < self.k:
+            heapq.heappush(self.heap, val)
+        else:
+            if val > self.heap[0]:
+                heapq.heappushpop(self.heap, val)      
+        return self.heap[0]
+```
+#### [Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/)
+Given an integer array `nums` and an integer `k`, return _the_ `k` _most frequent elements_. You may return the answer in **any order**.
+```python
+import heapq
+def topKFrequent(nums: List[int], k: int) -> List[int]:
+	freq = {}
+
+	for num in nums:
+		if num in freq:
+			freq[num] -= 1
+		else:
+			freq[num] = -1
+
+	heapfreq = [(v, k) for (k, v) in freq.items()]
+	heapq.heapify(heapfreq)
+
+	return [heapq.heappop(heapfreq)[1] for i in range(k)]
+```
+#### [Sort Characters By Frequency](https://leetcode.com/problems/sort-characters-by-frequency/)
+Given a string `s`, sort it in **decreasing order** based on the **frequency** of the characters. The **frequency** of a character is the number of times it appears in the string.
+
+Return _the sorted string_. If there are multiple answers, return _any of them_.
+```python
+import heapq
+from collections import Counter
+def frequencySort(self, s: str) -> str:
+	freq = Counter(s)
+	heapfreq = [(-v, k) for (k, v) in freq.items()]
+	heapq.heapify(heapfreq)
+	res = ''
+	for _ in range(len(heapfreq)):
+		curr = heapq.heappop(heapfreq)
+		res += str(curr[1]) * -curr[0]
+
+	return res
+```
+#### [K Closest Points to Origin](https://leetcode.com/problems/k-closest-points-to-origin/)
+Given an array of `points` where `points[i] = [xi, yi]` represents a point on the **X-Y** plane and an integer `k`, return the `k` closest points to the origin `(0, 0)`.
+
+The distance between two points on the **X-Y** plane is the Euclidean distance (i.e., `√(x1 - x2)2 + (y1 - y2)2`).
+
+You may return the answer in **any order**. The answer is **guaranteed** to be **unique** (except for the order that it is in).
+```python
+import heapq
+def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+	def distance(x, y):
+		return -(x**2 + y**2)
+
+	heap = []
+	for (x, y) in points:
+		if len(heap) < k:
+			heapq.heappush(heap, (distance(x, y), x, y))
+		else:
+			if heap[0][0] < distance(x, y):
+				heapq.heappop(heap)
+				heapq.heappush(heap, (distance(x, y), x, y))
+
+	return [[x, y] for (dist, x, y) in heap]
+```
