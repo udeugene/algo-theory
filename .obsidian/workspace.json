@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Patterns.md",
+                "file": "Problems.md",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Patterns.md",
+                "file": "Problems.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Patterns.md",
+                "file": "Problems.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Patterns.md"
+                "file": "Problems.md"
               }
             }
           }
@@ -148,14 +148,14 @@
   },
   "active": "c89542fc2641f0f4",
   "lastOpenFiles": [
+    "Patterns.md",
+    "Problems.md",
+    "Sortings.md",
+    "Methods.md",
     "obsidian-img/Pasted image 20230829000150.png",
     "obsidian-img/Pasted image 20230828235913.png",
     "obsidian-img/Pasted image 20230828235834.png",
     "], *[1.md",
-    "Patterns.md",
-    "Sortings.md",
-    "Methods.md",
-    "Problems.md",
     "obsidian-img/Pasted image 20230808230206.png",
     "obsidian-img/Pasted image 20230718003922.png",
     "obsidian-img/Pasted image 20230730220740.png",
@@ -168,7 +168,6 @@
     "obsidian-img/Pasted image 20230705013808.png",
     "obsidian-img",
     "Pasted image 20230705013727.png",
-    "Pasted image 20230705013522.png",
     "insertion.gif.md"
   ]
 }

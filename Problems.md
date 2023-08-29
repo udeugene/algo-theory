@@ -1,5 +1,5 @@
-## Merge linked lists
-
+## Linked lists
+#### Merge two linked lists
 You are given the heads of two sorted linked lists `list1` and `list2`.
 
 Merge the two lists in a one **sorted** list. The list should be made by splicing together the nodes of the first two lists.
@@ -28,7 +28,8 @@ class Solution:
             temp.next = self.mergeTwoLists(list1.next, list2)
         return temp
 ```
-## Plus one (recursive)
+## Other
+#### Plus one (recursive)
 You are given a **large integer** represented as an integer array `digits`, where each `digits[i]` is the `ith` digit of the integer. The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading `0`'s.
 
 Increment the large integer by one and return _the resulting array of digits_.

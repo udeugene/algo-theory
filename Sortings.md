@@ -150,13 +150,18 @@ def counting_sort(arr, n, k):
         arr_c[arr[i]] -= 1 # handle duplicates
     return arr_b
 ```
-## Radix sort
+## K-th order statistics
+### Quickselect
 ```python
-```
-## Bucket sort
-Bucket sort assumes that the input is drawn from a uniform distribution 0 to 1
-```python
-def bucket_sort(arr):
-	n = len(arr)
-	arr_b =
-```
+def randomized_select(arr, p, r, i):
+	if p == r:
+		return arr[p]
+	
+	q = randomized_partiton(arr, p, r)
+	k = q - p + 1
+	if i == k:
+		return arr[q]
+	elif i < k:
+		return randomized_select(arr, p, q - 1, i)
+	else:
+		return randomized_select(arr, q + 1, r, i - k)
